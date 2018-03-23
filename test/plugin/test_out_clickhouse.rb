@@ -36,14 +36,22 @@ class ClickHouseOutputTest < Test::Unit::TestCase
     time = Time.parse("2011-01-02 13:14:15 UTC").to_i
     d.emit({
              id: "d91d1c90",
-             year: 2016,
+             year: 2017,
              date: "2016-10-17",
              time: "2016-10-17 23:14:28",
              event: "click",
              user_id: 1982,
              revenue: 0.18
            }, time)
-
+    d.emit({
+             id: "d91d1c90",
+             year: 2019,
+             date: "2018-10-18",
+             time: "2016-10-17 23:14:28",
+             event: "clic",
+             user_id: 1981,
+             revenue: 0.18
+           }, time)
     # ### FileOutput#write returns path
     d.run
     # expect_path = "#{TMP_DIR}/out_file_test._0.log.gz"

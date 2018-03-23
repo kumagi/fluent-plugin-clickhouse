@@ -7,10 +7,12 @@ module Fluent
     include Fluent::SetTimeKeyMixin
     include Fluent::SetTagKeyMixin
 
-    config_param :urls,     :string, :default => ['http://localhost:1982']
+    config_param :host,     :string, :default => 'localhost'
+    config_param :port,     :string, :default => 1982
+    config_param :urls,     :string, :default => nil
     config_param :database, :string, :default => "default"
-    config_param :username, :string, :default => ""
-    config_param :password, :string, :default => '', :secret => true
+    config_param :username, :string, :default => nil
+    config_param :password, :string, :default => nil, :secret => true
 
     config_param :table, :string, :default => nil
     config_param :columns, :string, :default => nil
@@ -32,8 +34,21 @@ module Fluent
       if conf['columns']
         @columns = conf['columns'].split(",").map{|m| m.strip }
       end
+      @config = {}
+      if conf['username']
+        @config['username'] = conf['username']
+      end
+      if conf['password']
+        @config['password'] = conf['password']
+      end
+
       if conf['urls']
         @urls = @urls.split(",").map{|m| m.strip }
+      elsif conf['host']
+        @config['host'] = conf['host']
+      end
+      if conf['port']
+        @config['port'] = conf['port']
       end
     end
 
@@ -52,9 +67,7 @@ module Fluent
     end
 
     def write(chunk)
-      Clickhouse.establish_connection(urls: @urls,
-                                      username: @username,
-                                      password: @password)
+      Clickhouse.establish_connection(@config)
       Clickhouse.connection.insert_rows(@table, :names => @columns) { |rows|
         chunk.msgpack_each { |tag, time, record|
           rows << @columns.map{|m| record[m] }
