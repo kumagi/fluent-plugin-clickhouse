@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Fluentd output plugin for inserting into ClickHouse.}
   spec.description   = %q{Fluentd output inserted into ClickHouse as fast column-oriented OLAP DBMS.}
-  spec.homepage      = "https://github.com/kumagi/fluentd-plugin-clickhouse."
+  spec.homepage      = "https://github.com/kumagi/fluent-plugin-clickhouse"
   spec.license       = "Apache2.0"
 
   spec.rubyforge_project = "fluent-plugin-clickhouse"
